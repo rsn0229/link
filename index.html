@@ -177,16 +177,16 @@
             .map-item:hover .label { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
 
-@media (hover: none), (pointer: coarse) {
-    .map-item:active { transform: translate(-50%, -50%) scale(0.95); }
-    .label { 
-        opacity: 1; 
-        transform: translateX(-50%) translateY(0);
-        bottom: auto; 
-        top: 100%;
-        margin-top: 4px;
-    }
-}
+        @media (hover: none), (pointer: coarse) {
+            .map-item:active { transform: translate(-50%, -50%) scale(0.95); }
+            .label { 
+                opacity: 1; 
+                transform: translateX(-50%) translateY(0);
+                bottom: auto; 
+                top: 100%;
+                margin-top: 4px;
+            }
+        }
 
         .sticker-overlay {
             position: absolute;
@@ -204,12 +204,111 @@
             height: auto;
             object-fit: contain;
         }
+
+        .dreamcatcher {
+            position: absolute;
+            top: -10px; 
+            left: 5%;
+            width: 140px; 
+            transform-origin: top center; 
+            animation: sway 4s ease-in-out infinite alternate;
+            z-index: 5;
+            pointer-events: none; 
+            filter: drop-shadow(3px 5px 6px rgba(90, 60, 30, 0.4));
+            -webkit-tap-highlight-color: transparent; 
+        }
+
+        @keyframes sway {
+            0% { transform: rotate(-5deg); }
+            100% { transform: rotate(5deg); }
+        }
+
+        .feather-center { animation: featherSway 3.5s ease-in-out infinite alternate both; }
+        .feather-left { animation: featherSway 4s ease-in-out 0.5s infinite alternate both; }
+        .feather-right { animation: featherSway 3.8s ease-in-out 1s infinite alternate both; }
+
+        @keyframes featherSway {
+            0% { transform: rotate(-3.5deg); }
+            100% { transform: rotate(3.5deg); }
+        }
+
+        @media (max-width: 768px) {
+            .dreamcatcher {
+                width: 70px;
+                top: -5px;
+                left: 3%;
+                filter: drop-shadow(2px 3px 4px rgba(90, 60, 30, 0.4));
+            }
+        }
     </style>
 </head>
 <body>
+    <svg class="dreamcatcher" viewBox="0 0 100 210" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="featherGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#1B2A47" />
+                <stop offset="35%" stop-color="#87CEEB" />
+                <stop offset="70%" stop-color="#FFF9C4" />
+                <stop offset="100%" stop-color="#FFD54F" />
+            </linearGradient>
+            
+            <radialGradient id="webGrad" cx="50" cy="70" r="30" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#FFD54F" /> 
+                <stop offset="50%" stop-color="#87CEEB" />
+                <stop offset="100%" stop-color="#1B2A47" />
+            </radialGradient>
+
+            <path id="feather-shape" d="M 0 0 Q 4 20 9 37 L 5 35 Q 14 55 0 80 Q -14 55 -5 35 L -9 37 Q -4 20 0 0 Z" />
+            <path id="feather-shaft" d="M 0 0 Q 0 40 0 78" fill="none" stroke="#7a6244" stroke-width="0.5" />
+            
+            <path id="petal" d="M 50 70 C 70 55 65 40 50 40 C 35 40 30 55 50 70" fill="none" />
+            <path id="petal-inner" d="M 50 70 C 60 62 58 48 50 48 C 42 48 40 62 50 70" fill="none" />
+        </defs>
+
+        <line x1="50" y1="0" x2="50" y2="40" stroke="#7a6244" stroke-width="1.5" />
+        <circle cx="50" cy="70" r="30" stroke="#7a6244" stroke-width="2.5" fill="none" />
+        
+        <g stroke="url(#webGrad)" stroke-width="0.6">
+            <use href="#petal" /> <use href="#petal" transform="rotate(45 50 70)" />
+            <use href="#petal" transform="rotate(90 50 70)" /> <use href="#petal" transform="rotate(135 50 70)" />
+            <use href="#petal" transform="rotate(180 50 70)" /> <use href="#petal" transform="rotate(225 50 70)" />
+            <use href="#petal" transform="rotate(270 50 70)" /> <use href="#petal" transform="rotate(315 50 70)" />
+            
+            <use href="#petal-inner" /> <use href="#petal-inner" transform="rotate(45 50 70)" />
+            <use href="#petal-inner" transform="rotate(90 50 70)" /> <use href="#petal-inner" transform="rotate(135 50 70)" />
+            <use href="#petal-inner" transform="rotate(180 50 70)" /> <use href="#petal-inner" transform="rotate(225 50 70)" />
+            <use href="#petal-inner" transform="rotate(270 50 70)" /> <use href="#petal-inner" transform="rotate(315 50 70)" />
+            
+            <circle cx="50" cy="70" r="14" stroke-dasharray="2 2" fill="none" />
+        </g>
+
+        <g class="feather-left" style="transform-origin: 26px 88px;">
+            <line x1="26" y1="88" x2="26" y2="98" stroke="#7a6244" stroke-width="1" />
+            <g transform="translate(26, 98) rotate(8) scale(0.85)">
+                <use href="#feather-shape" fill="url(#featherGrad)" />
+                <use href="#feather-shaft" />
+            </g>
+        </g>
+
+        <g class="feather-center" style="transform-origin: 50px 100px;">
+            <line x1="50" y1="100" x2="50" y2="110" stroke="#7a6244" stroke-width="1" />
+            <g transform="translate(50, 110)">
+                <use href="#feather-shape" fill="url(#featherGrad)" />
+                <use href="#feather-shaft" />
+            </g>
+        </g>
+
+        <g class="feather-right" style="transform-origin: 74px 88px;">
+            <line x1="74" y1="88" x2="74" y2="98" stroke="#7a6244" stroke-width="1" />
+            <g transform="translate(74, 98) rotate(-8) scale(0.85)">
+                <use href="#feather-shape" fill="url(#featherGrad)" />
+                <use href="#feather-shaft" />
+            </g>
+        </g>
+    </svg>
+
     <div class="map-wrapper">
         <div class="map-container">
-            <!-- 대륙 Path -->
             <svg class="land-svg" viewBox="-80 -40 820 480" preserveAspectRatio="none">
                 <defs>
                     <path id="continentPath" d="M 7 8 L -4 18 L 2 25 L -7 37 L -4 50 L 0 60 L -17 69 L -24 76 L -17 98 L -17 110 L -27 121 L -24 138 L -14 152 L -3 158 L 10 159 L 27 156 L 53 149 L 68 149 L 85 153 L 92 159 L 88 166 L 75 167 L 67 163 L 57 167 L 55 179 L 67 194 L 84 193 L 89 197 L 94 207 L 79 218 L 62 214 L 51 208 L 40 201 L 30 193 L 26 197 L 13 216 L 6 221 L -4 227 L -5 240 L -8 261 L -8 269 L 5 276 L 13 278 L 24 269 L 43 271 L 46 278 L 78 282 L 87 282 L 98 278 L 102 288 L 94 297 L 95 307 L 103 319 L 118 317 L 127 314 L 143 322 L 144 330 L 143 341 L 156 362 L 164 364 L 185 360 L 194 372 L 202 377 L 212 365 L 211 361 L 198 346 L 197 334 L 207 329 L 218 337 L 231 350 L 253 357 L 269 354 L 283 351 L 294 358 L 306 343 L 301 338 L 289 336 L 293 326 L 308 323 L 317 323 L 331 322 L 347 326 L 351 320 L 351 310 L 365 305 L 369 313 L 383 312 L 392 303 L 393 293 L 379 289 L 369 281 L 356 275 L 351 272 L 339 266 L 325 269 L 320 255 L 321 244 L 315 242 L 307 241 L 308 224 L 321 220 L 328 227 L 338 220 L 338 213 L 335 203 L 348 201 L 358 213 L 366 217 L 376 216 L 389 216 L 413 228 L 420 228 L 430 228 L 443 228 L 444 242 L 438 247 L 440 252 L 448 271 L 437 285 L 447 295 L 464 296 L 474 302 L 479 307 L 512 303 L 532 309 L 546 309 L 566 295 L 581 278 L 594 273 L 598 257 L 602 252 L 622 249 L 629 241 L 623 230 L 618 223 L 619 217 L 631 218 L 646 220 L 653 214 L 660 204 L 662 200 L 655 184 L 643 179 L 635 172 L 632 158 L 626 153 L 614 149 L 615 141 L 618 128 L 614 118 L 598 105 L 584 102 L 571 111 L 563 118 L 553 114 L 554 100 L 568 97 L 573 94 L 575 81 L 577 71 L 573 53 L 563 40 L 560 32 L 544 26 L 523 30 L 506 32 L 486 28 L 475 23 L 469 33 L 469 46 L 472 54 L 471 59 L 458 63 L 455 56 L 451 50 L 430 53 L 414 57 L 404 66 L 400 73 L 403 83 L 376 84 L 365 86 L 363 76 L 359 69 L 358 59 L 349 49 L 347 39 L 335 26 L 321 22 L 283 19 L 270 22 L 257 28 L 265 36 L 269 43 L 262 47 L 249 53 L 238 49 L 217 43 L 190 45 L 167 49 L 159 56 L 153 63 L 137 64 L 132 66 L 129 73 L 120 83 L 109 87 L 99 86 L 91 84 L 64 98 L 55 100 L 50 91 L 48 80 L 57 74 L 57 67 L 57 59 L 53 49 L 60 39 L 72 35 L 87 26 L 89 15 L 81 9 L 87 -8 L 78 -12 L 68 -11 L 50 -1 L 34 5 L 24 -2 L 7 9 L 5 6 M 7 313 L -5 324 L -15 334 L -31 320 L -46 324 L -52 341 L -48 358 L -28 365 L -5 384 L -5 396 L 30 401 L 55 406 L 74 391 L 84 387 L 88 374 L 81 343 L 79 336 L 60 326 L 47 320 L 24 317 L 16 312 L 7 312 M 456 345 L 436 347 L 413 355 L 396 362 L 393 372 L 404 381 L 416 391 L 433 395 L 462 396 L 477 400 L 487 387 L 494 386 L 506 389 L 527 384 L 542 369 L 541 364 L 522 357 L 519 352 L 497 346 L 489 337 L 472 345 L 454 346" />
