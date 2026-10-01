@@ -232,14 +232,14 @@
             100% { transform: rotate(3.5deg); }
         }
 
-        @media (max-width: 768px) {
-            .dreamcatcher {
-                width: 70px;
-                top: -5px;
-                left: 3%;
-                filter: drop-shadow(2px 3px 4px rgba(90, 60, 30, 0.4));
-            }
-        }
+@media (max-width: 768px) {
+    .dreamcatcher {
+        width: clamp(90px, 22vw, 130px); 
+        top: -5px;
+        left: 3%;
+        filter: drop-shadow(2px 3px 4px rgba(90, 60, 30, 0.4));
+    }
+}
     </style>
 </head>
 <body>
