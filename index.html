@@ -11,13 +11,12 @@
             box-sizing: border-box;
         }
 
-        /* 💡 추가 및 수정된 부분: html과 body의 스크롤 원천 차단 및 모바일 높이 대응 */
         html, body {
             width: 100%;
-            height: 100%; /* 기본 호환성을 위한 설정 */
-            height: 100dvh; /* 모바일 주소창 높이를 정확히 계산하는 동적 높이 (최신 웹 표준) */
-            overflow: hidden; /* 가로, 세로 불필요한 스크롤 모두 숨김 */
-            touch-action: pan-x pan-y; /* 불필요한 핀치 줌 방지 */
+            height: 100%; 
+            height: 100dvh; 
+            overflow: hidden;
+            touch-action: pan-x pan-y;
         }
 
         @font-face {
