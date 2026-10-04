@@ -712,7 +712,7 @@ if(sticker) {
 
     const updateDisplay = () => {
         if (dailyClicks >= 100) {
-            countDisplay.innerHTML = `오늘의 마음은<br>${globalTotal}개 까지!`;
+            countDisplay.textContent = '오늘은 여기까지!';
         } else {
             countDisplay.textContent = globalTotal;
         }
@@ -745,7 +745,7 @@ if(sticker) {
 
         dailyClicks++;
         pendingClicks++;
-        globalTotal++;
+        globalTotal++; 
         localStorage.setItem(getTodayKey(), dailyClicks);
         
         updateDisplay();
