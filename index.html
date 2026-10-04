@@ -189,21 +189,101 @@
             }
         }
 
+.speech-bubble {
+    position: absolute;
+    bottom: 100%;
+    left: 60%;
+    transform: translateX(-50%) rotate(-5deg);
+    background-color: #fff;
+    border: 2px solid #6b665f;
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 15px;
+    color: #000;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    white-space: nowrap;
+    z-index: 9999;
+    margin-bottom: 15px;
+}
+
+.speech-bubble .heart-count {
+    text-align: center;
+    line-height: 1.3;
+}
+
+.speech-bubble::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 7px;
+    border-style: solid;
+    border-color: #6b665f transparent transparent transparent;
+}
+
+.speech-bubble::before {
+    content: '';
+    position: absolute;
+    top: calc(100% - 3px);
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 8px;
+    border-style: solid;
+    border-color: #fff transparent transparent transparent;
+    z-index: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .sticker-overlay:hover .speech-bubble {
+        opacity: 1;
+    }
+}
+
+.speech-bubble.show {
+    opacity: 1;
+}
+
+.speech-bubble svg {
+    width: 18px;
+    height: 18px;
+    fill: #87CEEB;
+    stroke: #000;
+    stroke-width: 2px;
+}
+
         .sticker-overlay {
             position: absolute;
             bottom: -65px;  
             right: -50px;
             width: 150px;
-            z-index: 15;
-            pointer-events: none;
+            z-index: 50;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent; 
             filter: drop-shadow(2px 4px 5px rgba(90, 60, 30, 0.3));
             transform: rotate(5deg);
+            transition: transform 0.3s ease;
         }
 
         .sticker-overlay img {
             width: 100%;
             height: auto;
             object-fit: contain;
+            transform-origin: bottom center; 
+        }
+
+        .sticker-overlay.bounce img {
+            animation: stickerSquash 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes stickerSquash {
+            0% { transform: scale(1, 1); }
+            50% { transform: scale(1, 0.97); } 
+            100% { transform: scale(1, 1); }
         }
 
         .dreamcatcher-scaler {
@@ -260,86 +340,143 @@
             }
         }
 
+.floating-heart svg {
+    width: 24px;
+    height: 24px;
+    filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.2));
+}
+
         @media (min-width: 1024px) {
             .map-wrapper {
                 transform: scale(1.3);
             }
             .dreamcatcher-scaler {
-                transform: scale(1.4);
+                transform: scale(1.3);
                 transform-origin: top left;
             }
+    .floating-heart svg {
+        width: 31.2px; /* 24px * 1.3 = 31.2px */
+        height: 31.2px;
+    }
         }
+
     </style>
 </head>
 <body>
     <div class="dreamcatcher-scaler">
         <div class="dreamcatcher-wrapper">
-            <svg class="dreamcatcher" viewBox="0 0 100 210" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="featherGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stop-color="#1B2A47" />
-                        <stop offset="35%" stop-color="#a2cee0" />
-                        <stop offset="70%" stop-color="#fcf4cf" />
-                        <stop offset="100%" stop-color="#ffe285" />
-                    </linearGradient>
-                    
-                    <radialGradient id="webGrad" cx="50" cy="70" r="30" gradientUnits="userSpaceOnUse">
-                        <stop offset="0%" stop-color="#f5f2e9" /> 
-                        <stop offset="50%" stop-color="#87CEEB" />
-                        <stop offset="100%" stop-color="#42668a" />
-                    </radialGradient>
+            <svg class="dreamcatcher" viewBox="0 0 100 220" xmlns="http://www.w3.org/2000/svg">
+<defs>
+    <linearGradient id="featherGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#1B2A47" />
+        <stop offset="35%" stop-color="#a2cee0" />
+        <stop offset="70%" stop-color="#fcf4cf" />
+        <stop offset="100%" stop-color="#ffd66e" />
+    </linearGradient>
+    
+    <radialGradient id="webGrad" cx="50" cy="70" r="30" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#f5f2e9" /> 
+        <stop offset="50%" stop-color="#87CEEB" />
+        <stop offset="100%" stop-color="#42668a" />
+    </radialGradient>
 
-                    <path id="feather-shape" d="M 0 0 Q 4 20 9 37 L 5 35 Q 14 55 0 80 Q -14 55 -5 35 L -9 37 Q -4 20 0 0 Z" />
-                    <path id="feather-shaft" d="M 0 0 Q 0 40 0 78" fill="none" stroke="#ede8e1" stroke-width="0.5" />
-                    
-                    <path id="petal" d="M 50 70 C 70 55 65 40 50 40 C 35 40 30 55 50 70" fill="none" />
-                    <path id="petal-inner" d="M 50 70 C 60 62 58 48 50 48 C 42 48 40 62 50 70" fill="none" />
-                </defs>
+    <radialGradient id="beadGrad" cx="65%" cy="30%" r="65%">
+        <stop offset="0%" stop-color="#ffffff" />
+        <stop offset="40%" stop-color="#87CEEB" />
+        <stop offset="100%" stop-color="#6e99c4" />
+    </radialGradient>
 
-                <g id="dreamcatcher-hoop">
-                    <circle cx="50" cy="70" r="30" fill="rgba(0,0,0,0)" pointer-events="all" />
-                    
-                    <line x1="50" y1="0" x2="50" y2="40" stroke="#bab4a9" stroke-width="1.5" pointer-events="none" />
-                    <circle cx="50" cy="70" r="30" stroke="#6385a6" stroke-width="2.5" fill="none" pointer-events="none" />
-                    
-                    <g stroke="url(#webGrad)" stroke-width="0.6" pointer-events="none">
-                        <use href="#petal" /> <use href="#petal" transform="rotate(45 50 70)" />
-                        <use href="#petal" transform="rotate(90 50 70)" /> <use href="#petal" transform="rotate(135 50 70)" />
-                        <use href="#petal" transform="rotate(180 50 70)" /> <use href="#petal" transform="rotate(225 50 70)" />
-                        <use href="#petal" transform="rotate(270 50 70)" /> <use href="#petal" transform="rotate(315 50 70)" />
-                        
-                        <use href="#petal-inner" /> <use href="#petal-inner" transform="rotate(45 50 70)" />
-                        <use href="#petal-inner" transform="rotate(90 50 70)" /> <use href="#petal-inner" transform="rotate(135 50 70)" />
-                        <use href="#petal-inner" transform="rotate(180 50 70)" /> <use href="#petal-inner" transform="rotate(225 50 70)" />
-                        <use href="#petal-inner" transform="rotate(270 50 70)" /> <use href="#petal-inner" transform="rotate(315 50 70)" />
-                        
-                        <circle cx="50" cy="70" r="14" stroke-dasharray="2 2" fill="none" />
-                    </g>
-                </g>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#FFDF85" />
+        <stop offset="40%" stop-color="#C2A378" />
+        <stop offset="100%" stop-color="#8B6C41" />
+    </linearGradient>
 
-                <g class="feather-left" style="transform-origin: 26px 88px;" pointer-events="none">
-                    <line x1="26" y1="88" x2="26" y2="98" stroke="#bab4a9" stroke-width="1" />
-                    <g transform="translate(26, 98) rotate(8) scale(0.85)">
-                        <use href="#feather-shape" fill="url(#featherGrad)" />
-                        <use href="#feather-shaft" />
-                    </g>
-                </g>
+    <path id="feather-shape" d="M 0 0 Q 4 20 9 37 L 5 35 Q 14 55 0 80 Q -14 55 -5 35 L -9 37 Q -4 20 0 0 Z" />
+    <path id="feather-shaft" d="M 0 0 Q 0 40 0 78" fill="none" stroke="#ede8e1" stroke-width="0.5" />
+    
+    <path id="petal" d="M 50 70 C 70 55 65 40 50 40 C 35 40 30 55 50 70" fill="none" />
+    <path id="petal-inner" d="M 50 70 C 60 62 58 48 50 48 C 42 48 40 62 50 70" fill="none" />
+</defs>
 
-                <g class="feather-center" style="transform-origin: 50px 100px;" pointer-events="none">
-                    <line x1="50" y1="100" x2="50" y2="110" stroke="#bab4a9" stroke-width="1" />
-                    <g transform="translate(50, 110)">
-                        <use href="#feather-shape" fill="url(#featherGrad)" />
-                        <use href="#feather-shaft" />
-                    </g>
-                </g>
+<g id="dreamcatcher-hoop">
+    <circle cx="50" cy="70" r="30" fill="rgba(0,0,0,0)" pointer-events="all" />
+    
+    <line x1="50" y1="0" x2="50" y2="40" stroke="#bab4a9" stroke-width="1.5" pointer-events="none" />
+    <circle cx="50" cy="70" r="30" stroke="#6385a6" stroke-width="2.5" fill="none" pointer-events="none" />
+    
+    <g stroke="url(#webGrad)" stroke-width="0.6" pointer-events="none">
+        <use href="#petal" /> <use href="#petal" transform="rotate(45 50 70)" />
+        <use href="#petal" transform="rotate(90 50 70)" /> <use href="#petal" transform="rotate(135 50 70)" />
+        <use href="#petal" transform="rotate(180 50 70)" /> <use href="#petal" transform="rotate(225 50 70)" />
+        <use href="#petal" transform="rotate(270 50 70)" /> <use href="#petal" transform="rotate(315 50 70)" />
+        
+        <use href="#petal-inner" /> <use href="#petal-inner" transform="rotate(45 50 70)" />
+        <use href="#petal-inner" transform="rotate(90 50 70)" /> <use href="#petal-inner" transform="rotate(135 50 70)" />
+        <use href="#petal-inner" transform="rotate(180 50 70)" /> <use href="#petal-inner" transform="rotate(225 50 70)" />
+        <use href="#petal-inner" transform="rotate(270 50 70)" /> <use href="#petal-inner" transform="rotate(315 50 70)" />
+    </g>
 
-                <g class="feather-right" style="transform-origin: 74px 88px;" pointer-events="none">
-                    <line x1="74" y1="88" x2="74" y2="98" stroke="#bab4a9" stroke-width="1" />
-                    <g transform="translate(74, 98) rotate(-8) scale(0.85)">
-                        <use href="#feather-shape" fill="url(#featherGrad)" />
-                        <use href="#feather-shaft" />
-                    </g>
-                </g>
+    <g pointer-events="none" transform="translate(30, 41) scale(0.4)">
+        <path d="M 50 70 L 36 56 L 43 70 Z" fill="#8f866e" />
+        <path d="M 50 70 L 36 56 L 50 63 Z" fill="#E3C154" />
+        <path d="M 50 70 L 64 56 L 50 63 Z" fill="#C49C31" />
+        <path d="M 50 70 L 64 56 L 57 70 Z" fill="#FCE786" />
+        <path d="M 50 70 L 64 84 L 57 70 Z" fill="#C49C31" />
+        <path d="M 50 70 L 64 84 L 50 77 Z" fill="#FCE786" />
+        <path d="M 50 70 L 36 84 L 50 77 Z" fill="#8f866e" />
+        <path d="M 50 70 L 36 84 L 43 70 Z" fill="#E3C154" />
+        <path d="M 50 70 L 50 42 L 45 65 Z" fill="#C49C31" />
+        <path d="M 50 70 L 50 42 L 55 65 Z" fill="#FCE786" />
+        <path d="M 50 70 L 78 70 L 55 65 Z" fill="#fff3bd" />
+        <path d="M 50 70 L 78 70 L 55 75 Z" fill="#C49C31" />
+        <path d="M 50 70 L 50 98 L 55 75 Z" fill="#E3C154" />
+        <path d="M 50 70 L 50 98 L 45 75 Z" fill="#857a69" />
+        <path d="M 50 70 L 22 70 L 45 75 Z" fill="#857a69" />
+        <path d="M 50 70 L 22 70 L 45 65 Z" fill="#E3C154" />
+    </g>
+</g>
+
+<g class="feather-left" style="transform-origin: 26px 88px;" pointer-events="none">
+    <line x1="26" y1="88" x2="26" y2="95" stroke="#bab4a9" stroke-width="1" />
+    <circle cx="26" cy="97" r="2" fill="url(#beadGrad)" />
+    <line x1="26" y1="99" x2="26" y2="100" stroke="#bab4a9" stroke-width="1" />
+    
+    <g transform="translate(26, 100) rotate(8) scale(0.85)">
+        <use href="#feather-shape" fill="url(#featherGrad)" />
+        <use href="#feather-shaft" />
+    </g>
+</g>
+
+<g class="feather-center" style="transform-origin: 50px 100px;" pointer-events="none">
+    <line x1="50" y1="100" x2="50" y2="105" stroke="#bab4a9" stroke-width="1" />
+    
+    <g id="feather-gem" transform="translate(50, 110) scale(1.5)">
+        <path d="M 0 -4 L 2.5 0 L 0 4 L -2.5 0 Z" fill="#a3d9f0"/> 
+        <path d="M 0 -4 L 2.5 0 L 0 0 Z" fill="#cff0fc"/> 
+        <path d="M 0 -4 L -2.5 0 L 0 0 Z" fill="#a3d9f0"/> 
+        <path d="M 0 4 L 2.5 0 L 0 0 Z" fill="#3096b8"/> 
+        <path d="M 0 4 L -2.5 0 L 0 0 Z" fill="#6ab9d9"/> 
+    </g>
+
+    <line x1="50" y1="114" x2="50" y2="117" stroke="#bab4a9" stroke-width="1" />
+    
+    <g transform="translate(50, 117) scale(0.95, 0.85)">
+        <use href="#feather-shape" fill="url(#featherGrad)" />
+        <use href="#feather-shaft" />
+    </g>
+</g>
+
+<g class="feather-right" style="transform-origin: 74px 88px;" pointer-events="none">
+    <line x1="74" y1="88" x2="74" y2="95" stroke="#bab4a9" stroke-width="1" />
+    <circle cx="74" cy="97" r="2" fill="url(#beadGrad)" />
+    <line x1="74" y1="99" x2="74" y2="100" stroke="#bab4a9" stroke-width="1" />
+    
+    <g transform="translate(74, 100) rotate(-8) scale(0.85)">
+        <use href="#feather-shape" fill="url(#featherGrad)" />
+        <use href="#feather-shaft" />
+    </g>
+</g>
             </svg>
         </div>
     </div>
@@ -549,6 +686,80 @@
                 }, 400); 
             });
         }
+
+        const sticker = document.querySelector('.sticker-overlay');
+
+if(sticker) {
+    const bubble = document.createElement('div');
+    bubble.className = 'speech-bubble';
+    bubble.innerHTML = `
+        <svg viewBox="0 0 32 32">
+            <path d="M16,28 C16,28 3,18.5 3,10 C3,5 7.5,3 11,3 C14,3 16,6 16,6 C16,6 18,3 21,3 C24.5,3 29,5 29,10 C29,18.5 16,28 16,28 Z" />
+        </svg>
+        <span class="heart-count">0</span>
+    `;
+    sticker.appendChild(bubble);
+
+    const countDisplay = bubble.querySelector('.heart-count');
+    
+    const getTodayKey = () => 'hearts_' + new Date().toDateString();
+    let dailyClicks = parseInt(localStorage.getItem(getTodayKey())) || 0;
+    let pendingClicks = 0;
+    
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbyCfFII0zxz8P3K7B_1GHS7C0fb89dVif-Q8mEULJ104czZ2FzJ7-FVuLdZVThumklh/exec';
+
+
+if (dailyClicks >= 100) {
+    countDisplay.innerHTML = `오늘의 마음은<br>${dailyClicks}개 까지!`;
+} else {
+    countDisplay.textContent = dailyClicks;
+}
+
+    let bubbleTimeout;
+
+    sticker.addEventListener('pointerdown', (e) => {
+        if (window.matchMedia("(hover: none)").matches || window.matchMedia("(pointer: coarse)").matches) {
+            bubble.classList.add('show');
+            clearTimeout(bubbleTimeout);
+            bubbleTimeout = setTimeout(() => bubble.classList.remove('show'), 2000);
+        }
+
+if (dailyClicks >= 100) {
+    countDisplay.innerHTML = `오늘의 마음은<br>${dailyClicks}개 까지!`;
+    return;
+}
+
+        dailyClicks++;
+        pendingClicks++;
+        localStorage.setItem(getTodayKey(), dailyClicks);
+        
+if (dailyClicks >= 100) {
+    countDisplay.innerHTML = `오늘의 마음은<br>${dailyClicks}개 까지!`;
+} else {
+    countDisplay.textContent = dailyClicks;
+}
+
+        sticker.classList.remove('bounce');
+        void sticker.offsetWidth; 
+        sticker.classList.add('bounce');
+    });
+
+    setInterval(() => {
+        if (pendingClicks > 0 && GAS_URL !== 'https://script.google.com/macros/s/AKfycbyCfFII0zxz8P3K7B_1GHS7C0fb89dVif-Q8mEULJ104czZ2FzJ7-FVuLdZVThumklh/exec') {
+            const clicksToSend = pendingClicks;
+            pendingClicks = 0; 
+            
+            fetch(GAS_URL, {
+                method: 'POST',
+                mode: 'no-cors', 
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `clicks=${clicksToSend}`
+            }).catch(error => console.error('전송 실패:', error));
+        }
+    }, 5000);
+}
     </script>
 </body>
 </html>
