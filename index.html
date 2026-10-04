@@ -696,7 +696,7 @@ if(sticker) {
         <svg viewBox="0 0 32 32">
             <path d="M16,28 C16,28 3,18.5 3,10 C3,5 7.5,3 11,3 C14,3 16,6 16,6 C16,6 18,3 21,3 C24.5,3 29,5 29,10 C29,18.5 16,28 16,28 Z" />
         </svg>
-        <span class="heart-count">0</span>
+        <span class="heart-count">...</span>
     `;
     sticker.appendChild(bubble);
 
@@ -706,17 +706,31 @@ if(sticker) {
     let dailyClicks = parseInt(localStorage.getItem(getTodayKey())) || 0;
     let pendingClicks = 0;
     
+    let globalTotal = 0; 
+    
     const GAS_URL = 'https://script.google.com/macros/s/AKfycbyCfFII0zxz8P3K7B_1GHS7C0fb89dVif-Q8mEULJ104czZ2FzJ7-FVuLdZVThumklh/exec';
 
+    const updateDisplay = () => {
+        if (dailyClicks >= 100) {
+            countDisplay.innerHTML = `오늘의 마음은<br>${globalTotal}개 까지!`;
+        } else {
+            countDisplay.textContent = globalTotal;
+        }
+    };
 
-if (dailyClicks >= 100) {
-    countDisplay.innerHTML = `오늘의 마음은<br>${dailyClicks}개 까지!`;
-} else {
-    countDisplay.textContent = dailyClicks;
-}
+    fetch(GAS_URL)
+        .then(res => res.text())
+        .then(text => {
+            const fetchedTotal = parseInt(text);
+            if (!isNaN(fetchedTotal)) {
+                globalTotal = fetchedTotal;
+                updateDisplay();
+            }
+        })
+        .catch(err => console.error('초기 데이터 불러오기 실패:', err));
 
     let bubbleTimeout;
-
+    
     sticker.addEventListener('pointerdown', (e) => {
         if (window.matchMedia("(hover: none)").matches || window.matchMedia("(pointer: coarse)").matches) {
             bubble.classList.add('show');
@@ -724,20 +738,17 @@ if (dailyClicks >= 100) {
             bubbleTimeout = setTimeout(() => bubble.classList.remove('show'), 2000);
         }
 
-if (dailyClicks >= 100) {
-    countDisplay.innerHTML = `오늘의 마음은<br>${dailyClicks}개 까지!`;
-    return;
-}
+        if (dailyClicks >= 100) {
+            updateDisplay();
+            return;
+        }
 
         dailyClicks++;
         pendingClicks++;
+        globalTotal++;
         localStorage.setItem(getTodayKey(), dailyClicks);
         
-if (dailyClicks >= 100) {
-    countDisplay.innerHTML = `오늘의 마음은<br>${dailyClicks}개 까지!`;
-} else {
-    countDisplay.textContent = dailyClicks;
-}
+        updateDisplay();
 
         sticker.classList.remove('bounce');
         void sticker.offsetWidth; 
@@ -745,15 +756,25 @@ if (dailyClicks >= 100) {
     });
 
     setInterval(() => {
-        if (pendingClicks > 0 && GAS_URL !== 'https://script.google.com/macros/s/.../exec') {
+        if (pendingClicks > 0) {
             const clicksToSend = pendingClicks;
             pendingClicks = 0; 
+            
             const targetUrl = `${GAS_URL}?clicks=${clicksToSend}`;
             
-            fetch(targetUrl, {
-                method: 'GET',
-                mode: 'no-cors' 
-            }).catch(error => console.error('전송 실패:', error));
+            fetch(targetUrl)
+                .then(res => res.text())
+                .then(text => {
+                    const fetchedTotal = parseInt(text);
+                    if (!isNaN(fetchedTotal)) {
+                        globalTotal = fetchedTotal;
+                        updateDisplay();
+                    }
+                })
+                .catch(error => {
+                    console.error('전송 실패:', error);
+                    pendingClicks += clicksToSend;
+                });
         }
     }, 5000);
 }
