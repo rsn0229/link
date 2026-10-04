@@ -711,11 +711,7 @@ if(sticker) {
     const GAS_URL = 'https://script.google.com/macros/s/AKfycbyCfFII0zxz8P3K7B_1GHS7C0fb89dVif-Q8mEULJ104czZ2FzJ7-FVuLdZVThumklh/exec';
 
     const updateDisplay = () => {
-        if (dailyClicks >= 100) {
-            countDisplay.textContent = '오늘은 여기까지!';
-        } else {
-            countDisplay.textContent = globalTotal;
-        }
+        countDisplay.textContent = globalTotal;
     };
 
     fetch(GAS_URL)
@@ -730,16 +726,23 @@ if(sticker) {
         .catch(err => console.error('초기 데이터 불러오기 실패:', err));
 
     let bubbleTimeout;
-    
+
+    sticker.addEventListener('pointerenter', () => {
+        countDisplay.textContent = globalTotal;
+    });
+
     sticker.addEventListener('pointerdown', (e) => {
         if (window.matchMedia("(hover: none)").matches || window.matchMedia("(pointer: coarse)").matches) {
             bubble.classList.add('show');
             clearTimeout(bubbleTimeout);
-            bubbleTimeout = setTimeout(() => bubble.classList.remove('show'), 2000);
+            bubbleTimeout = setTimeout(() => {
+                bubble.classList.remove('show');
+                countDisplay.textContent = globalTotal; 
+            }, 2000);
         }
 
         if (dailyClicks >= 100) {
-            updateDisplay();
+            countDisplay.textContent = '오늘은 여기까지!';
             return;
         }
 
@@ -748,11 +751,15 @@ if(sticker) {
         globalTotal++; 
         localStorage.setItem(getTodayKey(), dailyClicks);
         
-        updateDisplay();
+        countDisplay.textContent = globalTotal;
 
         sticker.classList.remove('bounce');
         void sticker.offsetWidth; 
         sticker.classList.add('bounce');
+    });
+
+    sticker.addEventListener('pointerleave', () => {
+        countDisplay.textContent = globalTotal;
     });
 
     setInterval(() => {
