@@ -189,79 +189,12 @@
             }
         }
 
-.speech-bubble {
-    position: absolute;
-    bottom: 100%;
-    left: 60%;
-    transform: translateX(-50%) rotate(-5deg);
-    background-color: #fff;
-    border: 2px solid #6b665f;
-    padding: 6px 12px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 15px;
-    color: #000;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    white-space: nowrap;
-    z-index: 9999;
-    margin-bottom: 15px;
-}
-
-.speech-bubble .heart-count {
-    text-align: center;
-    line-height: 1.3;
-}
-
-.speech-bubble::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 8px;
-    border-style: solid;
-    border-color: #6b665f transparent transparent transparent;
-}
-
-.speech-bubble::before {
-    content: '';
-    position: absolute;
-    top: calc(100% - 3px);
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 8px;
-    border-style: solid;
-    border-color: #fff transparent transparent transparent;
-    z-index: 1;
-}
-
-@media (hover: hover) and (pointer: fine) {
-    .sticker-overlay:hover .speech-bubble {
-        opacity: 1;
-    }
-}
-
-.speech-bubble.show {
-    opacity: 1;
-}
-
-.speech-bubble svg {
-    width: 18px;
-    height: 18px;
-    fill: #87CEEB;
-    stroke: #000;
-    stroke-width: 2px;
-}
-
         .sticker-overlay {
             position: absolute;
-            bottom: -65px;  
-            right: -50px;
+            bottom: -60px;  
+            right: -35px;
             width: 150px;
-            z-index: 50;
+            z-index: 15;
             cursor: pointer;
             -webkit-tap-highlight-color: transparent; 
             filter: drop-shadow(2px 4px 5px rgba(90, 60, 30, 0.3));
@@ -284,6 +217,27 @@
             0% { transform: scale(1, 1); }
             50% { transform: scale(1, 0.97); } 
             100% { transform: scale(1, 1); }
+        }
+
+        .floating-heart {
+            position: fixed;
+            pointer-events: none; 
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: floatUpHeart 2.5s ease-out forwards;
+        }
+
+        @keyframes floatUpHeart {
+            0% { 
+                transform: translate(-50%, -50%) scale(0.5); 
+                opacity: 1; 
+            }
+            100% { 
+                transform: translate(calc(-50% + var(--random-x)), -120px) scale(1); 
+                opacity: 0; 
+            }
         }
 
         .dreamcatcher-scaler {
@@ -688,103 +642,43 @@
         }
 
         const sticker = document.querySelector('.sticker-overlay');
+        const heartColors = ['#ffffff', '#ffdf85', '#5a9bd4']; 
 
-if(sticker) {
-    const bubble = document.createElement('div');
-    bubble.className = 'speech-bubble';
-    bubble.innerHTML = `
-        <svg viewBox="0 0 32 32">
-            <path d="M16,28 C16,28 3,18.5 3,10 C3,5 7.5,3 11,3 C14,3 16,6 16,6 C16,6 18,3 21,3 C24.5,3 29,5 29,10 C29,18.5 16,28 16,28 Z" />
-        </svg>
-        <span class="heart-count">...</span>
-    `;
-    sticker.appendChild(bubble);
+        if(sticker) {
+            sticker.addEventListener('pointerdown', (e) => {
+                sticker.classList.remove('bounce');
+                void sticker.offsetWidth; 
+                sticker.classList.add('bounce');
 
-    const countDisplay = bubble.querySelector('.heart-count');
-    
-    const getTodayKey = () => 'hearts_' + new Date().toDateString();
-    let dailyClicks = parseInt(localStorage.getItem(getTodayKey())) || 0;
-    let pendingClicks = 0;
-    
-    let globalTotal = 0; 
-    
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbyCfFII0zxz8P3K7B_1GHS7C0fb89dVif-Q8mEULJ104czZ2FzJ7-FVuLdZVThumklh/exec';
+                const heart = document.createElement('div');
+                heart.classList.add('floating-heart');
+                
+                heart.innerHTML = `
+                    <svg viewBox="0 0 32 32" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16.2,8.8c-2,-3,-6,-4,-8.2,-2.3C6,8.2,3,11.5,4,16c2,9,11,15,12.2,15.5s10,-6,12,-15.5c1,-4.5,-2,-7.8,-4,-9.5s-6.2-0.7,-8.2,2.3c-1.2,1.8,-1.8,2.7,-3.2,5" />
+                    </svg>
+                `;
+                
+const rect = sticker.getBoundingClientRect(); 
 
-    const updateDisplay = () => {
-        countDisplay.textContent = globalTotal;
-    };
 
-    fetch(GAS_URL)
-        .then(res => res.text())
-        .then(text => {
-            const fetchedTotal = parseInt(text);
-            if (!isNaN(fetchedTotal)) {
-                globalTotal = fetchedTotal;
-                updateDisplay();
-            }
-        })
-        .catch(err => console.error('초기 데이터 불러오기 실패:', err));
+let startX = rect.left + (rect.width / 2) + 30; 
+let startY = rect.top + 5; 
+heart.style.color = heartColors[Math.floor(Math.random() * heartColors.length)];
 
-    let bubbleTimeout;
+const randomX = (Math.random() - 0.5) * 80;
+heart.style.setProperty('--random-x', `${randomX}px`);
 
-    sticker.addEventListener('pointerenter', () => {
-        countDisplay.textContent = globalTotal;
-    });
+heart.style.left = `${startX}px`;
+heart.style.top = `${startY}px`;
 
-    sticker.addEventListener('pointerdown', (e) => {
-        if (window.matchMedia("(hover: none)").matches || window.matchMedia("(pointer: coarse)").matches) {
-            bubble.classList.add('show');
-            clearTimeout(bubbleTimeout);
-            bubbleTimeout = setTimeout(() => {
-                bubble.classList.remove('show');
-                countDisplay.textContent = globalTotal; 
-            }, 2000);
-        }
+                document.body.appendChild(heart);
 
-        if (dailyClicks >= 100) {
-            countDisplay.textContent = '오늘은 여기까지!';
-            return;
-        }
-
-        dailyClicks++;
-        pendingClicks++;
-        globalTotal++; 
-        localStorage.setItem(getTodayKey(), dailyClicks);
-        
-        countDisplay.textContent = globalTotal;
-
-        sticker.classList.remove('bounce');
-        void sticker.offsetWidth; 
-        sticker.classList.add('bounce');
-    });
-
-    sticker.addEventListener('pointerleave', () => {
-        countDisplay.textContent = globalTotal;
-    });
-
-    setInterval(() => {
-        if (pendingClicks > 0) {
-            const clicksToSend = pendingClicks;
-            pendingClicks = 0; 
-            
-            const targetUrl = `${GAS_URL}?clicks=${clicksToSend}`;
-            
-            fetch(targetUrl)
-                .then(res => res.text())
-                .then(text => {
-                    const fetchedTotal = parseInt(text);
-                    if (!isNaN(fetchedTotal)) {
-                        globalTotal = fetchedTotal;
-                        updateDisplay();
-                    }
-                })
-                .catch(error => {
-                    console.error('전송 실패:', error);
-                    pendingClicks += clicksToSend;
+                heart.addEventListener('animationend', () => {
+                    heart.remove();
                 });
+            });
         }
-    }, 5000);
-}
     </script>
 </body>
 </html>
