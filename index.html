@@ -211,6 +211,11 @@
             96% { transform: rotate(-2deg) scale(0.7); }
         }
 
+        .x-mark-wrapper.stopped .x-mark,
+        .x-mark.stopped {
+            animation: none !important;
+        }
+
         .sticker-overlay {
             position: absolute;
             bottom: -60px;  
@@ -861,7 +866,7 @@
             });
         }
 
-        const secretXMark = document.getElementById('secret-x-mark');
+const secretXMark = document.getElementById('secret-x-mark');
         const noteModal = document.getElementById('note-modal');
         
         const OPEN_DATE = new Date('2027-01-16T00:00:00+09:00');
@@ -875,6 +880,7 @@
                     window.open(TARGET_URL, '_blank', 'noopener,noreferrer');
                 } else {
                     noteModal.classList.add('active');
+                    secretXMark.classList.add('stopped'); 
                 }
             });
 
