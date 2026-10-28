@@ -144,15 +144,26 @@
             pointer-events: none; 
         }
 
-        .x-mark {
+        .x-mark-wrapper {
             position: absolute;
             width: 40px;
             height: 40px;
-            transform: translate(-50%, -50%) rotate(-5deg) scale(0.7);
-            pointer-events: none;
+            transform: translate(-50%, -50%);
             z-index: 25;
+            cursor: url('assets/cur2.png'), pointer;
+            pointer-events: auto;
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .x-mark {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-5deg) scale(0.7);
             mix-blend-mode: multiply;
             opacity: 0.95;
+            animation: xHintWiggle 4.5s ease-in-out infinite;
+            pointer-events: none;
         }
 
         .vintage-ribbon {
@@ -176,6 +187,9 @@
             }
             .map-item:hover { transform: translate(-50%, -50%) scale(1.15); }
             .map-item:hover .label { opacity: 1; transform: translateX(-50%) translateY(0); }
+            .x-mark-wrapper:hover {
+                transform: translate(-50%, -50%) scale(1.3);
+            }
         }
 
         @media (hover: none), (pointer: coarse) {
@@ -189,13 +203,21 @@
             }
         }
 
+        @keyframes xHintWiggle {
+            0%, 76%, 100% { transform: rotate(-5deg) scale(0.7); }
+            81% { transform: rotate(-15deg) scale(0.7); }
+            86% { transform: rotate(5deg) scale(0.7); }
+            91% { transform: rotate(-11deg) scale(0.7); }
+            96% { transform: rotate(-2deg) scale(0.7); }
+        }
+
         .sticker-overlay {
             position: absolute;
             bottom: -60px;  
             right: -35px;
             width: 150px;
             z-index: 15;
-            cursor: pointer;
+            pointer-events: none; 
             -webkit-tap-highlight-color: transparent; 
             filter: drop-shadow(2px 4px 5px rgba(90, 60, 30, 0.3));
             transform: rotate(5deg);
@@ -206,7 +228,9 @@
             width: 100%;
             height: auto;
             object-fit: contain;
-            transform-origin: bottom center; 
+            transform-origin: bottom center;
+            pointer-events: auto;
+            display: block;
         }
 
         .sticker-overlay.bounce img {
@@ -283,6 +307,86 @@
             100% { transform: rotate(3.5deg); }
         }
 
+        .note-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .note-modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .note-wrapper {
+            width: 86vw;
+            max-width: 340px;
+            aspect-ratio: 16 / 9;
+            transform: scale(0.9) rotate(-1.5deg);
+            transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        .note-modal-overlay.active .note-wrapper {
+            transform: scale(1) rotate(-1.5deg);
+        }
+
+        .note-paper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background-color: #f2eee5;
+            background-image: 
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E"),
+                linear-gradient(to right, transparent 0%, rgba(0,0,0,0.06) 49.5%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0.1) 51%, transparent 100%),
+                linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.06) 49.5%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0.1) 51%, transparent 100%),
+                repeating-linear-gradient(45deg, rgba(161, 136, 127, 0.03) 0px, rgba(161, 136, 127, 0.03) 1px, transparent 1px, transparent 3px),
+                radial-gradient(circle at center, transparent 30%, rgba(62, 39, 35, 0.15) 100%);
+            background-blend-mode: multiply, normal, normal, normal, multiply;
+            box-shadow: 
+                inset 0 0 20px rgba(161, 136, 127, 0.15),
+                1px 2px 5px rgba(62, 39, 35, 0.15), 
+                0 15px 35px rgba(62, 39, 35, 0.25);
+            border-radius: 5px 255px 3px 25px / 255px 5px 225px 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            padding: 14px 20px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .note-logo {
+            width: 78%;
+            max-width: 78%;
+            max-height: 68%;
+            object-fit: contain;
+            filter: drop-shadow(0px 3px 8px rgba(255, 255, 255, 0.85));
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .note-text {
+            font-size: 16.8px;
+            color: #5d4037;
+            opacity: 0.72;
+            letter-spacing: 1.5px;
+            z-index: 3;
+            pointer-events: none;
+        }
+
         @media (max-width: 768px) {
             .dreamcatcher-scaler {
                 top: -5px;
@@ -294,11 +398,11 @@
             }
         }
 
-.floating-heart svg {
-    width: 24px;
-    height: 24px;
-    filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.2));
-}
+        .floating-heart svg {
+            width: 24px;
+            height: 24px;
+            filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.2));
+        }
 
         @media (min-width: 1024px) {
             .map-wrapper {
@@ -308,12 +412,17 @@
                 transform: scale(1.3);
                 transform-origin: top left;
             }
-    .floating-heart svg {
-        width: 31.2px; /* 24px * 1.3 = 31.2px */
-        height: 31.2px;
-    }
+            .floating-heart svg {
+                width: 31.2px;
+                height: 31.2px;
+            }
+            .note-wrapper {
+                max-width: 420px;
+            }
+            .note-text {
+                font-size: 19.2px;
+            }
         }
-
     </style>
 </head>
 <body>
@@ -518,17 +627,22 @@
             <span class="label">작곡 커미션</span>
         </a>
 
-        <svg class="x-mark" style="top: 90%; left: 65%;" viewBox="0 0 40 40">
-            <path d="M 12 8 Q 23 20 28 36 M 34 6 Q 22 20 10 34"
-                  fill="none" 
-                  stroke="#b32424" 
-                  stroke-width="4" 
-                  stroke-linecap="round" 
-                  filter="url(#inkBleed)" />
-        </svg>
-        <div class="sticker-overlay">
-            <img src="assets/sticker.png" alt="장식 스티커">
+        <div class="x-mark-wrapper" id="secret-x-mark" style="top: 90%; left: 65%;">
+            <svg class="x-mark" viewBox="0 0 40 40">
+                <rect width="40" height="40" fill="transparent" />
+                <path d="M 12 8 Q 23 20 28 36 M 34 6 Q 22 20 10 34"
+                      fill="none" 
+                      stroke="#b32424" 
+                      stroke-width="4" 
+                      stroke-linecap="round" 
+                      filter="url(#inkBleed)" />
+            </svg>
         </div>
+
+        <div class="sticker-overlay">
+            <img src="assets/sticker.png" alt="장식 스티커" id="sticker-img">
+        </div>
+
         <svg class="vintage-ribbon" viewBox="0 0 400 120">
             <defs>
                 <linearGradient id="ribbonFront" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -566,6 +680,16 @@
         </svg>
     </div>
 
+    <!-- 16:9 비율 + style.css(.paper-container) 스타일이 적용된 쪽지 모달 -->
+    <div class="note-modal-overlay" id="note-modal">
+        <div class="note-wrapper">
+            <div class="note-paper">
+                <img src="assets/logo.png" alt="로고" class="note-logo">
+                <p class="note-text">coming soon!</p>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
         document.addEventListener('selectstart', function(e) { e.preventDefault(); });
@@ -595,7 +719,7 @@
         let returnTimeout;
         let swayTimeout;
 
-        if(hoop && wrapper) {
+        if (hoop && wrapper) {
             hoop.addEventListener('click', (e) => {
                 let clientX = e.clientX;
                 if (e.touches && e.touches.length > 0) {
@@ -646,10 +770,64 @@
         }
 
         const sticker = document.querySelector('.sticker-overlay');
+        const stickerImg = document.getElementById('sticker-img');
         const heartColors = ['#ffffff', '#ffdf85', '#5a9bd4']; 
 
-        if(sticker) {
-            sticker.addEventListener('pointerdown', (e) => {
+        const hitCanvas = document.createElement('canvas');
+        const hitCtx = hitCanvas.getContext('2d', { willReadFrequently: true });
+        let isCanvasReady = false;
+
+        function setupStickerHitCanvas() {
+            if (!stickerImg || !stickerImg.naturalWidth) return;
+            hitCanvas.width = stickerImg.naturalWidth;
+            hitCanvas.height = stickerImg.naturalHeight;
+            hitCtx.drawImage(stickerImg, 0, 0);
+            isCanvasReady = true;
+        }
+
+        if (stickerImg) {
+            if (stickerImg.complete && stickerImg.naturalWidth > 0) {
+                setupStickerHitCanvas();
+            } else {
+                stickerImg.addEventListener('load', setupStickerHitCanvas);
+            }
+        }
+
+        function isOpaqueCharacterPixel(e) {
+            const w = stickerImg.clientWidth;
+            const h = stickerImg.clientHeight;
+            if (!w || !h) return false;
+
+            const x = e.offsetX;
+            const y = e.offsetY;
+
+            if (isCanvasReady) {
+                try {
+                    const natX = Math.floor((x / w) * stickerImg.naturalWidth);
+                    const natY = Math.floor((y / h) * stickerImg.naturalHeight);
+                    const pixelAlpha = hitCtx.getImageData(natX, natY, 1, 1).data[3];
+                    return pixelAlpha > 20;
+                } catch (err) {
+                }
+            }
+
+            const normX = (x - w / 2) / (w * 0.36);
+            const normY = (y - h * 0.55) / (h * 0.40);
+            return (normX * normX + normY * normY) <= 1;
+        }
+
+        if (sticker && stickerImg) {
+            stickerImg.addEventListener('pointermove', (e) => {
+                if (isOpaqueCharacterPixel(e)) {
+                    stickerImg.style.cursor = "url('assets/cur2.png'), pointer";
+                } else {
+                    stickerImg.style.cursor = 'default';
+                }
+            });
+
+            stickerImg.addEventListener('pointerdown', (e) => {
+                if (!isOpaqueCharacterPixel(e)) return;
+
                 sticker.classList.remove('bounce');
                 void sticker.offsetWidth; 
                 sticker.classList.add('bounce');
@@ -663,24 +841,45 @@
                     </svg>
                 `;
                 
-const rect = sticker.getBoundingClientRect(); 
+                const rect = sticker.getBoundingClientRect(); 
+                let startX = rect.left + (rect.width / 2) + 30; 
+                let startY = rect.top + 5; 
 
+                heart.style.color = heartColors[Math.floor(Math.random() * heartColors.length)];
 
-let startX = rect.left + (rect.width / 2) + 30; 
-let startY = rect.top + 5; 
-heart.style.color = heartColors[Math.floor(Math.random() * heartColors.length)];
+                const randomX = (Math.random() - 0.5) * 80;
+                heart.style.setProperty('--random-x', `${randomX}px`);
 
-const randomX = (Math.random() - 0.5) * 80;
-heart.style.setProperty('--random-x', `${randomX}px`);
-
-heart.style.left = `${startX}px`;
-heart.style.top = `${startY}px`;
+                heart.style.left = `${startX}px`;
+                heart.style.top = `${startY}px`;
 
                 document.body.appendChild(heart);
 
                 heart.addEventListener('animationend', () => {
                     heart.remove();
                 });
+            });
+        }
+
+        const secretXMark = document.getElementById('secret-x-mark');
+        const noteModal = document.getElementById('note-modal');
+        
+        const OPEN_DATE = new Date('2027-01-16T00:00:00+09:00');
+        const TARGET_URL = 'https://ancwav.sardina.love';
+
+        if (secretXMark && noteModal) {
+            secretXMark.addEventListener('click', () => {
+                const now = new Date();
+
+                if (now >= OPEN_DATE) {
+                    window.open(TARGET_URL, '_blank', 'noopener,noreferrer');
+                } else {
+                    noteModal.classList.add('active');
+                }
+            });
+
+            noteModal.addEventListener('click', () => {
+                noteModal.classList.remove('active');
             });
         }
     </script>
